@@ -1,0 +1,265 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'eclipse'
+    id 'com.bmuschko.docker-remote-api' version '6.1.4'
+    id "com.patdouble.awsecr" version "0.6.0"
+    id 'org.hidetake.ssh' version '2.10.1'
+    id "com.github.ben-manes.versions" version "0.28.0"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation 'org.masukomi:aspirin:0.11.01'
+    implementation 'com.sparkjava:spark-core:2.9.1'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.0'
+    implementation 'commons-configuration:commons-configuration:1.10'
+    implementation 'commons-dbutils:commons-dbutils:1.7'
+    implementation 'com.h2database:h2:1.4.200'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.apache.commons:commons-email:1.5'
+    implementation 'mysql:mysql-connector-java:8.0.19'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.11.4'
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+    implementation 'javax.activation:activation:1.1.1'
+    implementation 'org.slf4j:slf4j-jdk14:2.0.0-alpha1'
+    implementation 'com.github.davidmoten:subethasmtp:5.2.1'
+    testImplementation 	'org.junit.jupiter:junit-jupiter:5.6.0'
+    testImplementation 	'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testImplementation 	'org.junit.jupiter:junit-jupiter:5.6.0'
+    testRuntimeOnly 	'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_12
+    targetCompatibility = JavaVersion.VERSION_12
+}
+
+group = 'com.madibasoft.messaging'
+version = '1.0.0'
+description = 'MailGuard'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// =================================================================
+// Jar tasks
+// =================================================================
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+	println 'Building executable jar'
+	exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+	manifest {
+        attributes 'Implementation-Title': project.description,
+        	'Implementation-Version': archiveVersion,
+        	'Main-Class': 'com.madibasoft.messaging.smtp.MailGuard'
+    }
+    duplicatesStrategy 'exclude'
+    archiveFileName = project.name+'-'+System.getProperty("jar_version",project.version)+'.jar'
+    destinationDirectory = file(projectDir.path+'/docker')
+    from(configurations.runtimeClasspath.files.collect { zipTree(it) })
+    with jar
+}
+
+// =================================================================
+// Docker tasks and config
+// =================================================================
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.image.*
+
+docker {
+	registryCredentials {
+        url = docker_registry+'/'+docker_repo
+	}
+}
+
+task createDockerFile(type: Dockerfile) {
+	dependsOn fatJar
+    from 'openjdk:12-alpine'
+    label(['maintainer': 'Madibasoft "info@madibasoft.com"'])
+	copyFile file(fatJar.archiveFileName).absolutePath, '/root/'+fatJar.archiveFileName
+	copyFile file(fatJar.destinationDirectory).absolutePath+'/'+'mailguard.properties', '/root/mailguard.properties'
+	copyFile file(fatJar.destinationDirectory).absolutePath+'/user.properties', '/root/user.properties'
+
+	entryPoint 'java'
+	defaultCommand '-jar', '/root/'+fatJar.archiveFileName
+	exposePort 80
+	exposePort 25
+}
+
+task dockerBuild(type: DockerBuildImage) {
+	dependsOn createDockerFile
+    remove = true
+    images.add(docker_registry+'/'+docker_repo+':'+System.getProperty("jar_version",version))
+}
+
+task dockerPush(type: DockerPushImage) {
+	dependsOn 'dockerBuild'
+	images.add(docker_registry+'/'+docker_repo+':'+System.getProperty("jar_version",version))
+}
+
+task dockerClean(type: DockerRemoveImage) {
+	dependsOn 'dockerBuild'
+	//targetImageId { '1b7459df5172' }
+}
+
+task createContainer(type: DockerCreateContainer) {
+    dependsOn dockerBuild
+    targetImageId dockerBuild.getImageId()
+    hostConfig.portBindings = ['25:25','80:80']
+    hostConfig.autoRemove = true
+    hostConfig.links = ["docker_auto:database"]
+    tty = true
+}
+
+task startContainer(dependsOn: 'dockerBuild', type: DockerStartContainer) {
+    dependsOn dockerBuild
+    targetContainerId createContainer.getContainerId()
+}
+
+task stopContainer(type: DockerStopContainer) {
+    targetContainerId createContainer.getContainerId()
+}
+
+task testContainer(type: Test) {
+    dependsOn startContainer
+    finalizedBy stopContainer
+}
+// =================================================================
+// end Docker
+// =================================================================
+
+// =================================================================
+// SSH Deployment tasks
+// =================================================================
+remotes {
+  prodServer {
+    host = aws_host_prod
+    user = aws_user_prod
+    identity = file(aws_rsa_file_prod)
+   }
+   stageServer {
+   	host = aws_host_stage
+   	user = aws_user_stage
+   	identity = file(aws_rsa_file_stage)
+   }
+}
+
+ssh.settings {
+	knownHosts = allowAnyHosts
+	timeoutSec = 5
+	keepAliveSec = 60
+	retryWaitSec = 5
+}
+
+def userSettingsGeneric(environment,domain) {
+	println 'Creating user settings on '+domain
+	def userProperties = 'user.properties'
+	ssh.run {
+		session(environment) {
+			// create the properties file
+
+			// uiserid : useremail
+	        execute 'echo "# User Properties" > '+userProperties
+			execute 'echo "001=stephen.johnson@.com" >> '+userProperties
+			execute 'echo "002=caylee.johnson@gmail.com" >> '+userProperties
+			execute 'echo "003=madibasoft@gmail.com" >> '+userProperties
+
+
+			// useremail : proxyermail
+			execute 'echo "stephen.johnson@.com=mailguard.aabbccdd@'+domain+'" >> '+userProperties
+			execute 'echo "caylee.johnson@gmail.com=mailguard.aabbccee@'+domain+'" >> '+userProperties
+			execute 'echo "madibasoft@gmail.com=mailguard.aabbccff@'+domain+'" >> '+userProperties
+
+			// proxyemail : userid
+			execute 'echo "mailguard.aabbccdd@'+domain+'=001" >> '+userProperties
+			execute 'echo "mailguard.aabbccee@'+domain+'=002" >> '+userProperties
+			execute 'echo "mailguard.aabbccff@'+domain+'=003" >> '+userProperties
+		}
+	}
+ }
+
+def settingsGeneric(environment, domain) {
+	userSettingsGeneric(environment, domain)
+	println 'Creating mailguard settings on '+domain
+	def properties = 'mailguard.properties'
+	ssh.run {
+	      session(environment) {
+	        // create the properties file
+	        execute 'echo "# Mail Proxy Autodeployment" > '+properties
+
+	        execute 'echo "mailguard.internal.host='+environment.host+'" >> '+properties
+			execute 'echo "mailguard.public.host='+domain+'" >> '+properties
+			execute 'echo "mailguard.http.secret=ytrewqytrewq" >> '+properties
+
+			execute 'echo "# MailGuard SMTP Service settings" >> '+properties
+			execute 'echo "mailguard.smtp.in.port=2500" >> '+properties
+			execute 'echo "mailguard.smtp.in.hash_prefix=madibasoftmail" >> '+properties
+
+			execute 'echo "# Web service endpoint settings" >> '+properties
+			execute 'echo "mailguard.http.port=4777" >> '+properties
+
+			execute 'echo "# Forwarding SMTP settings" >> '+properties
+			execute 'echo "mailguard.smtp.out.type=smtp" >> '+properties
+			execute 'echo "mailguard.smtp.out.host=email-smtp.eu-west-1.amazonaws.com" >> '+properties
+			execute 'echo "mailguard.smtp.out.port=587" >> '+properties
+			execute 'echo "mailguard.smtp.out.username='+smtp_username+'" >> '+properties
+			execute 'echo "mailguard.smtp.out.password='+smtp_password+'" >> '+properties
+	      }
+	}
+ }
+
+def deployGeneric(environment, jarFile, domain) {
+	println 'Deploying mailguard application on '+domain
+	settingsGeneric(environment, domain)
+	ssh.run {
+		session(environment) {
+	        executeSudo ignoreError: true, 'pkill java'
+	        // set up port redirects so we don't need to run the process as root
+	        executeSudo ignoreError: true, 'iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 25 -j REDIRECT --to-ports 2500'
+			executeSudo ignoreError: true, 'iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 4777'
+	      	println 'Uploading '+file(jarFile).name+' to '+ ' /home/'+environment.user+' on domain '+domain
+	        put from: file(jarFile), into: '/home/'+environment.user
+	        executeSudo ignoreError: true, 'sleep 3'
+	        execute 'java -jar '+file(jarFile).name+' 2>> mailguard.out >> mailguard.err &'
+	      }
+	}
+ }
+
+task deployStage() {
+	dependsOn fatJar
+	doLast {
+ 		deployGeneric(remotes.stageServer, fatJar.archiveFile, dns_host_stage)
+ 	}
+}
+
+task deployProd() {
+	dependsOn fatJar
+	doLast {
+ 		deployGeneric(remotes.prodServer, fatJar.archiveFile, dns_host_prod)
+ 	}
+ }
+
+ task deploy() {
+	dependsOn deployStage, deployProd
+}
+
+// =================================================================
