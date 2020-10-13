@@ -21,7 +21,7 @@ test {
 dependencies {
     implementation 'org.masukomi:aspirin:0.11.01'
     implementation 'com.sparkjava:spark-core:2.9.1'
-    implementation 'org.apache.httpcomponents.client5:httpclient5:5.0'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'commons-configuration:commons-configuration:1.10'
     implementation 'commons-dbutils:commons-dbutils:1.7'
     implementation 'com.h2database:h2:1.4.200'
@@ -32,11 +32,11 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
     implementation 'javax.activation:activation:1.1.1'
     implementation 'org.slf4j:slf4j-jdk14:2.0.0-alpha1'
-    implementation 'com.github.davidmoten:subethasmtp:5.2.1'
-    testImplementation 	'org.junit.jupiter:junit-jupiter:5.6.0'
-    testImplementation 	'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testImplementation 	'org.junit.jupiter:junit-jupiter:5.6.0'
-    testRuntimeOnly 	'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+    implementation 'com.github.davidmoten:subethasmtp:5.2.6'
+    testImplementation 	'org.junit.jupiter:junit-jupiter:5.7.0'
+    testImplementation 	'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testImplementation 	'org.junit.jupiter:junit-jupiter:5.7.0'
+    testRuntimeOnly 	'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
 java {
@@ -45,7 +45,7 @@ java {
 }
 
 group = 'com.madibasoft.messaging'
-version = '1.0.0'
+version = '1.12.18'
 description = 'MailGuard'
 
 publishing {
