@@ -4,19 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.madibasoft.messaging.smtp.db.DbFactory;
+import com.madibasoft.messaging.smtp.db.DbInterface;
+import com.madibasoft.messaging.smtp.ws.link.ExpireService;
+import com.madibasoft.messaging.smtp.ws.link.SetService;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.madibasoft.messaging.smtp.Config;
-import com.madibasoft.messaging.smtp.Link;
-import com.madibasoft.messaging.smtp.ResolvedLink;
-import com.madibasoft.messaging.smtp.db.DbFactory;
-import com.madibasoft.messaging.smtp.db.DbInterface;
-import com.madibasoft.messaging.smtp.ws.link.ExpireService;
-import com.madibasoft.messaging.smtp.ws.link.SetService;
 
 public class LogicTest {
 	private static final Logger log = LoggerFactory.getLogger(LogicTest.class);

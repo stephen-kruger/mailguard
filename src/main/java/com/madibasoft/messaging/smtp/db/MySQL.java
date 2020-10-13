@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.madibasoft.messaging.smtp.Config;
 import com.madibasoft.messaging.smtp.Utils;
 
-public class MySQL extends DbAbstract implements DbInterface {
+public class MySQL extends DbAbstract {
 	private static final Logger log = LoggerFactory.getLogger(MySQL.class);
 	private Connection conn = null;
 	private boolean running = false;

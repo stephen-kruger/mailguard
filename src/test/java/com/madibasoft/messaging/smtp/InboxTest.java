@@ -20,22 +20,17 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.madibasoft.messaging.smtp.db.DbFactory;
+import com.madibasoft.messaging.smtp.user.UserNotFoundException;
+import com.madibasoft.messaging.smtp.user.UserServiceFactory;
+import com.madibasoft.messaging.smtp.user.UserServiceInterface;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.subethamail.smtp.RejectException;
-
-import com.madibasoft.messaging.smtp.Config;
-import com.madibasoft.messaging.smtp.Inbox;
-import com.madibasoft.messaging.smtp.Link;
-import com.madibasoft.messaging.smtp.MailUtils;
-import com.madibasoft.messaging.smtp.ResolvedLink;
-import com.madibasoft.messaging.smtp.db.DbFactory;
-import com.madibasoft.messaging.smtp.user.UserNotFoundException;
-import com.madibasoft.messaging.smtp.user.UserServiceFactory;
-import com.madibasoft.messaging.smtp.user.UserServiceInterface;
 
 import spark.utils.IOUtils;
 

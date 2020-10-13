@@ -3,10 +3,6 @@ package com.madibasoft.messaging.smtp.user;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.madibasoft.messaging.smtp.user.UserNotFoundException;
-import com.madibasoft.messaging.smtp.user.UserServiceImpl;
-import com.madibasoft.messaging.smtp.user.UserServiceInterface;
-
 /*
  * Used for stress testing
  */

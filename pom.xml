@@ -4,23 +4,23 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.madibasoft.messaging</groupId>
 	<artifactId>mailguard</artifactId>
-	<version>1.12.17</version>
+	<version>1.12.18</version>
 	<name>MailGuard</name>
 	<properties>
-		<subethasmtp_version>5.2.1</subethasmtp_version>
+		<subethasmtp_version>5.2.6</subethasmtp_version>
 		<slf4j_version>2.0.0-alpha1</slf4j_version>
-		<jupiter_version>5.6.0</jupiter_version>
+		<jupiter_version>5.7.0</jupiter_version>
 		<javax_mail_version>1.5.0-b01</javax_mail_version>
-		<spark_version>2.9.1</spark_version>
+		<spark_version>2.9.3</spark_version>
 		<h2_version>1.4.200</h2_version>
 		<commons-config_version>1.10</commons-config_version>
 		<commons-codec_version>1.13</commons-codec_version>
 		<aspirin_version>0.11.01</aspirin_version>
 		<gson_version>2.8.6</gson_version>
-		<httpclient5_version>5.0</httpclient5_version>
+		<httpclient5_version>5.0.3</httpclient5_version>
 		<commons-email_version>1.5</commons-email_version>
-		<mysql_version>8.0.19</mysql_version>
-		<libphonenumber_version>8.11.4</libphonenumber_version>
+		<mysql_version>8.0.21</mysql_version>
+		<libphonenumber_version>8.12.11</libphonenumber_version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>

@@ -16,50 +16,51 @@ import org.slf4j.LoggerFactory;
 public class Config extends CompositeConfiguration {
 	private static final Logger log = LoggerFactory.getLogger(Config.class);
 	public static final String CONFIG_NAME = "mailguard.properties";
+	public static final String CUSTOM_CONFIG_NAME = "user.properties";
 
 	private static Config configInstance;
-	public static final String MAILGUARD_DB_NAME = "mailguard.dbname";
-	public static final String MAILGUARD_H2_DB_PATH = "mailguard.h2.dbpath";
-	public static final String MAILGUARD_USERSERVICE = "mailguard.userservice";
-	public static final String MAILGUARD_DBCLASS = "mailguard.dbclass";
+	public static final String MAILGUARD_DB_NAME = "mailguard_dbname";
+	public static final String MAILGUARD_H2_DB_PATH = "mailguard_h2_dbpath";
+	public static final String MAILGUARD_USERSERVICE = "mailguard_userservice";
+	public static final String MAILGUARD_DBCLASS = "mailguard_dbclass";
 
-	public static final String MAILGUARD_PUBLIC_HOST = "mailguard.public.host";
-	public static final String MAILGUARD_CUSTOM_PROPERTIES = "mailguard.custom.properties";
-	public static final String MAILGUARD_LINK_VALIDITY = "mailguard.link.validity";
-	public static final String MAILGUARD_REJECTION_SUBJECT = "mailguard.rejection.subject";
-	public static final String MAILGUARD_REJECTION_BODY = "mailguard.rejection.body";
+	public static final String MAILGUARD_PUBLIC_HOST = "mailguard_public_host";
+	public static final String MAILGUARD_CUSTOM_PROPERTIES = "mailguard_custom_properties";
+	public static final String MAILGUARD_LINK_VALIDITY = "mailguard_link_validity";
+	public static final String MAILGUARD_REJECTION_SUBJECT = "mailguard_rejection_subject";
+	public static final String MAILGUARD_REJECTION_BODY = "mailguard_rejection_body";
 
 	// HTTP service settings
-	public static final String MAILGUARD_HTTP_HOST = "mailguard.http.host";
-	public static final String MAILGUARD_HTTP_PORT = "mailguard.http.port";
-	public static final String MAILGUARD_HTTP_SECRET = "mailguard.http.secret";
+	public static final String MAILGUARD_HTTP_HOST = "mailguard_http_host";
+	public static final String MAILGUARD_HTTP_PORT = "mailguard_http_port";
+	public static final String MAILGUARD_HTTP_SECRET = "mailguard_http_secret";
 
 	// Inbound SMTP service settings
-	public static final String MAILGUARD_SMTP_IN_HOST = "mailguard.smtp.in.host";
-	public static final String MAILGUARD_SMTP_IN_PORT = "mailguard.smtp.in.port";
-	public static final String MAILGUARD_SMTP_MAX_IN_CONNECTIONS = "mailguard.smtp.in.max.connections";
-	public static final String MAILGUARD_SMTP_IN_ACCEPT = "mailguard.smtp.in.accept";
-	public static final String MAILGUARD_SMTP_IN_AUTO_ACCEPT = "mailguard.smtp.in.auto_accept";
-	public static final String MAILGUARD_SMTP_IN_MAX_MAIL_SIZE = "mailguard.smtp.in.max_mail_size";
+	public static final String MAILGUARD_SMTP_IN_HOST = "mailguard_smtp_in_host";
+	public static final String MAILGUARD_SMTP_IN_PORT = "mailguard_smtp_in_port";
+	public static final String MAILGUARD_SMTP_MAX_IN_CONNECTIONS = "mailguard_smtp_in_max_connections";
+	public static final String MAILGUARD_SMTP_IN_ACCEPT = "mailguard_smtp_in_accept";
+	public static final String MAILGUARD_SMTP_IN_AUTO_ACCEPT = "mailguard_smtp_in_auto_accept";
+	public static final String MAILGUARD_SMTP_IN_MAX_MAIL_SIZE = "mailguard_smtp_in_max_mail_size";
 
 	// Outbound SMTP service settings
-	public static final String MAILGUARD_SMTP_OUT_TYPE = "mailguard.smtp.out.type";
+	public static final String MAILGUARD_SMTP_OUT_TYPE = "mailguard_smtp_out_type";
 	// how to route incoming smtp messages
-	public static final String MAILGUARD_SMTP_FORWARDING_TYPE = "mailguard.smtp.forwarding.type";
+	public static final String MAILGUARD_SMTP_FORWARDING_TYPE = "mailguard_smtp_forwarding_type";
 
 	/* milliseconds to retry outbound */
-	public static final String MAILGUARD_SMTP_OUT_DIRECT_EXPIRY = "mailguard.smtp.out.direct.expiry";
-	public static final String MAILGUARD_SMTP_OUT_HOST = "mailguard.smtp.out.host";
-	public static final String MAILGUARD_SMTP_OUT_PORT = "mailguard.smtp.out.port";
-	public static final String MAILGUARD_SMTP_OUT_USERNAME = "mailguard.smtp.out.username";
-	public static final String MAILGUARD_SMTP_OUT_PASSWORD = "mailguard.smtp.out.password";
+	public static final String MAILGUARD_SMTP_OUT_DIRECT_EXPIRY = "mailguard_smtp_out_direct_expiry";
+	public static final String MAILGUARD_SMTP_OUT_HOST = "mailguard_smtp_out_host";
+	public static final String MAILGUARD_SMTP_OUT_PORT = "mailguard_smtp_out_port";
+	public static final String MAILGUARD_SMTP_OUT_USERNAME = "mailguard_smtp_out_username";
+	public static final String MAILGUARD_SMTP_OUT_PASSWORD = "mailguard_smtp_out_password";
 
 	// mysql settings
-	public static final String MAILGUARD_MYSQL_HOST = "mailguard.mysql.host";
-	public static final String MAILGUARD_MYSQL_PORT = "mailguard.mysql.port";
-	public static final String MAILGUARD_MYSQL_USERNAME = "mailguard.mysql.username";
-	public static final String MAILGUARD_MYSQL_PASSWORD = "mailguard.mysql.password";
-	public static final String MAILGUARD_MESSAGING_API = "mailguard.messaging.api";
+	public static final String MAILGUARD_MYSQL_HOST = "mailguard_mysql_host";
+	public static final String MAILGUARD_MYSQL_PORT = "mailguard_mysql_port";
+	public static final String MAILGUARD_MYSQL_USERNAME = "mailguard_mysql_username";
+	public static final String MAILGUARD_MYSQL_PASSWORD = "mailguard_mysql_password";
+	public static final String MAILGUARD_MESSAGING_API = "mailguard_messaging_api";
 
 	public enum SmtpOutType {
 		dummy, smtp, direct
@@ -80,7 +81,7 @@ public class Config extends CompositeConfiguration {
 	 */
 	private void setupBuiltin() {
 		try {
-			log.debug("Loading built-in config ({})", getClass().getResource("/" + CONFIG_NAME));
+			log.info("Loading built-in config ({})", getClass().getResource("/" + CONFIG_NAME));
 			addConfiguration(new PropertiesConfiguration(getClass().getResource("/" + CONFIG_NAME)));
 		} catch (Throwable t) {
 			log.warn("Problem loading built-in config :{}", t.getMessage());
@@ -95,7 +96,7 @@ public class Config extends CompositeConfiguration {
 			PropertiesConfiguration builtin = new PropertiesConfiguration(getClass().getResource("/" + CONFIG_NAME));
 			PropertiesConfiguration pconfig;
 			String fileName = builtin.getString(MAILGUARD_CUSTOM_PROPERTIES);
-			log.debug("Looking for custom config in {}", builtin.getString(MAILGUARD_CUSTOM_PROPERTIES));
+			log.info("Looking for custom config in {}", builtin.getString(MAILGUARD_CUSTOM_PROPERTIES));
 			if (new File(fileName).exists()) {
 				log.info("Loading custom config from home ({})", builtin.getString(MAILGUARD_CUSTOM_PROPERTIES));
 				pconfig = new PropertiesConfiguration(builtin.getString(MAILGUARD_CUSTOM_PROPERTIES));
@@ -105,6 +106,13 @@ public class Config extends CompositeConfiguration {
 			} else {
 				log.info("No custom over-ride found in {}", fileName);
 				pconfig = new PropertiesConfiguration();
+				// String envString = 
+				// MAILGUARD_SMTP_IN_PORT+"=${env:"+MAILGUARD_SMTP_IN_PORT+"}\n"+
+				// MAILGUARD_SMTP_IN_PORT+"=${env:"+MAILGUARD_SMTP_IN_PORT+"}\n"+
+				// MAILGUARD_HTTP_SECRET+"=${env:"+MAILGUARD_HTTP_SECRET+"}\n"+
+				// MAILGUARD_HTTP_HOST+"=${env:"+MAILGUARD_HTTP_HOST+"}\n";
+				// ;
+				// pconfig.load(new StringReader(envString));
 			}
 
 			addConfiguration(pconfig);
@@ -152,7 +160,12 @@ public class Config extends CompositeConfiguration {
 	}
 
 	public String getString(String key) {
-		return super.getString(key);
+		String value = super.getString(key);
+		if (value==null) {
+			// check the env
+			return super.getString("${env:"+key+"}");
+		}
+		return value;
 	}
 
 	public void setString(String key, String value) {

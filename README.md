@@ -20,6 +20,7 @@ The link may be set to a default expiry, or manually expired at any time, after 
 - ensure you have a Java 12 compatible JDK installed
 - to build an executable jar using Maven command
     * ```mvn package```
+    * ```mvn versions:display-dependency-updates```
     * you will find  an executable JAR file located in the docker directory `` mailguard-1.0.2-jar-with-dependencies.jar``
     
 # Runbook
@@ -62,10 +63,10 @@ Aspirin will not pass SPF authorization because SPF looks up the DNS record for 
 ##### mailguard.smtp.out.type=smtp
 - you may use the following settings to configure an external smtp server
 
-    * ```mailguard.smtp.out.host=smtp.xxxx.com```
-    * ```mailguard.smtp.out.port=587```
-    * ```mailguard.smtp.out.username=xxxx@xxxx.com``` optional
-    * ```mailguard.smtp.out.password=xxxx``` optional
+    * ```mailguard_smtp_out_host=smtp.xxxx.com```
+    * ```mailguard_smtp_out_port=587```
+    * ```mailguard_smtp_out_username=xxxx@xxxx.com``` optional
+    * ```mailguard_smtp_out_password=xxxx``` optional
     
 # Some possible future improvements
 - explore one-to-many links, for e.g. to allow us to bulk enable communications between a partner and a segment of users

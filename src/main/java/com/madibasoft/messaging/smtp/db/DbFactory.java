@@ -14,7 +14,7 @@ public class DbFactory {
 	public static DbInterface getDatabase()
 			throws SQLException, InstantiationException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
-		log.debug("Instantiating database {}", Config.getInstance().getString(Config.MAILGUARD_DBCLASS));
+		log.info("Instantiating database {}", Config.getInstance().getString(Config.MAILGUARD_DBCLASS));
 		return (DbInterface) Class.forName(Config.getInstance().getString(Config.MAILGUARD_DBCLASS)).getConstructor()
 				.newInstance();
 	}

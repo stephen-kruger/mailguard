@@ -1,0 +1,16 @@
+Received: from 192.168.87.127 (localhost [127.0.0.1])
+        by localhost
+        with SMTP (MailGuardSMTP V1.0) id JZDCXE23
+        for john.hancock@mailguard.com;
+        Fri, 16 Aug 2019 08:11:13 +0800 (SGT)
+From: from@test.com
+To: john.hancock@test.com
+Message-ID: <1481751887.13.1565914273131.JavaMail.john.hancock@MYHOST.local>
+Subject: This is the subject
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+This is the body
+This is an email in the body john.hancock@test.com
+This is a phone number.

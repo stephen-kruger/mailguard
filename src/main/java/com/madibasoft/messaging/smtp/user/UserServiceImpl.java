@@ -12,7 +12,7 @@ import com.madibasoft.messaging.smtp.MailUtils;
 import com.madibasoft.messaging.smtp.Utils;
 
 /*
- * A production ready service should implement UserService against some existing identify system. This is a simple properties file based example for illustration.
+ * A production ready service should implement UserService against some existing identity system. This is a simple properties file based example for illustration.
  */
 public class UserServiceImpl implements UserServiceInterface {
 	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -20,14 +20,14 @@ public class UserServiceImpl implements UserServiceInterface {
 
 	public UserServiceImpl() {
 		try {
-			String fileName = Config.getInstance().getString("mailguard.custom.user.properties");
-			log.debug("Looking for user config in {}", fileName);
+			String fileName = Config.getInstance().getString("mailguard_custom_user_properties");
+			log.info("Looking for user config in {}", fileName);
 			if (new File(fileName).exists()) {
-				log.debug("Loading custom user from home ({})", fileName);
+				log.info("Loading custom user from home ({})", fileName);
 				props = new PropertiesConfiguration();
 				props.load(fileName);
 			} else {
-				log.debug("Loading internal user config");
+				log.info("Loading internal user config");
 				props = new PropertiesConfiguration(getClass().getResource("/user.properties"));
 			}
 		} catch (ConfigurationException e) {

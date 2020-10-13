@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.madibasoft.messaging.smtp.Config;
 import com.madibasoft.messaging.smtp.Utils;
 
-public class H2 extends DbAbstract implements DbInterface {
+public class H2 extends DbAbstract {
 	private static final Logger log = LoggerFactory.getLogger(H2.class);
 	private Server h2Server;
 	private Connection conn = null;

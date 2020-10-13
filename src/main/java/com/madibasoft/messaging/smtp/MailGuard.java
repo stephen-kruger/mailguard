@@ -21,7 +21,7 @@ import com.madibasoft.messaging.smtp.ws.message.SendService;
 
 public class MailGuard {
 	private static final Logger log = LoggerFactory.getLogger(MailGuard.class);
-	private static final String NAME = "mailguard.name";
+	private static final String NAME = "mailguard_name";
 	private SMTPServer smtpServer;
 	private DbInterface db;
 

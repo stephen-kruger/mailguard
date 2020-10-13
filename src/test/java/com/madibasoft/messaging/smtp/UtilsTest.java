@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.madibasoft.messaging.smtp.Utils;
-
 class UtilsTest {
 	private static final Logger log = LoggerFactory.getLogger(UtilsTest.class);
 

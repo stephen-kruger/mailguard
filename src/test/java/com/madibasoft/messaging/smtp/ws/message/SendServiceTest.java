@@ -10,13 +10,6 @@ import java.security.InvalidParameterException;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.MimeMessage;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gson.JsonObject;
 import com.madibasoft.messaging.smtp.Config;
 import com.madibasoft.messaging.smtp.Inbox;
@@ -29,7 +22,13 @@ import com.madibasoft.messaging.smtp.db.DbInterface;
 import com.madibasoft.messaging.smtp.user.UserNotFoundException;
 import com.madibasoft.messaging.smtp.user.UserServiceFactory;
 import com.madibasoft.messaging.smtp.user.UserServiceInterface;
-import com.madibasoft.messaging.smtp.ws.message.SendService;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SendServiceTest {
 	private static final Logger log = LoggerFactory.getLogger(SendServiceTest.class);

@@ -6,21 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.madibasoft.messaging.smtp.db.DbFactory;
+import com.madibasoft.messaging.smtp.user.UserNotFoundException;
+import com.madibasoft.messaging.smtp.user.UserServiceImpl;
+import com.madibasoft.messaging.smtp.user.UserServiceInterface;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.madibasoft.messaging.smtp.Config;
-import com.madibasoft.messaging.smtp.Inbox;
-import com.madibasoft.messaging.smtp.Link;
-import com.madibasoft.messaging.smtp.MailUtils;
-import com.madibasoft.messaging.smtp.ResolvedLink;
-import com.madibasoft.messaging.smtp.db.DbFactory;
-import com.madibasoft.messaging.smtp.user.UserNotFoundException;
-import com.madibasoft.messaging.smtp.user.UserServiceImpl;
-import com.madibasoft.messaging.smtp.user.UserServiceInterface;
 
 public class LinkTest {
 	private static Inbox inbox;

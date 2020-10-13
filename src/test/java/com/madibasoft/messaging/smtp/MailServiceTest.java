@@ -4,21 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.mail.internet.MimeMessage;
 
+import com.madibasoft.messaging.smtp.db.DbFactory;
+import com.madibasoft.messaging.smtp.db.DbInterface;
+import com.madibasoft.messaging.smtp.ws.message.ListService;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.madibasoft.messaging.smtp.Config;
-import com.madibasoft.messaging.smtp.Inbox;
-import com.madibasoft.messaging.smtp.Link;
-import com.madibasoft.messaging.smtp.MailUtils;
-import com.madibasoft.messaging.smtp.ResolvedLink;
-import com.madibasoft.messaging.smtp.db.DbFactory;
-import com.madibasoft.messaging.smtp.db.DbInterface;
-import com.madibasoft.messaging.smtp.ws.message.ListService;
 
 import spark.utils.IOUtils;
 

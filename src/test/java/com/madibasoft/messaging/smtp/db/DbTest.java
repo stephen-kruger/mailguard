@@ -8,6 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.madibasoft.messaging.smtp.Link;
+import com.madibasoft.messaging.smtp.ResolvedLink;
+import com.madibasoft.messaging.smtp.user.UserNotFoundException;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,12 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.madibasoft.messaging.smtp.Link;
-import com.madibasoft.messaging.smtp.ResolvedLink;
-import com.madibasoft.messaging.smtp.db.DbFactory;
-import com.madibasoft.messaging.smtp.db.DbInterface;
-import com.madibasoft.messaging.smtp.user.UserNotFoundException;
 
 public class DbTest {
 	private static final Logger log = LoggerFactory.getLogger(DbTest.class);

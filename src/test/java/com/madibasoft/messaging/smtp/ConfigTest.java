@@ -7,15 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.madibasoft.messaging.smtp.Config.ForwardingType;
+import com.madibasoft.messaging.smtp.Config.SmtpOutType;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.madibasoft.messaging.smtp.Config;
-import com.madibasoft.messaging.smtp.Config.ForwardingType;
-import com.madibasoft.messaging.smtp.Config.SmtpOutType;
 
 class ConfigTest {
 	private static final Logger log = LoggerFactory.getLogger(ConfigTest.class);
