@@ -1,8 +1,8 @@
 package com.madibasoft.messaging.smtp.chat;
 
 import java.io.IOException;
+import java.util.UUID;
 
-import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -21,7 +21,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.madibasoft.messaging.smtp.Config;
-import com.madibasoft.messaging.smtp.MailUtils;
 import com.madibasoft.messaging.smtp.ResolvedLink;
 import com.madibasoft.messaging.smtp.Utils;
 
@@ -32,34 +31,31 @@ public class ChatClient {
 	private Config config = Config.getInstance();
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	private Timeout timeout = Timeout.ofMilliseconds(2000);
-	private static final String templateId = "aff79f14-bbc4-4ed0-ae45-90e9e3b7df0f";
-	// private static final String templateId =
-	// "5eac8b23-dd7b-4920-9685-49f467a2fbe4";
 	private static ChatClient chatClient;
 
 	private ChatClient() {
 
 	}
 
-	public enum Category {
-		transactional, account, offers, announcements, research
-	};
-
-	public enum MessageCategory {
-		Partner
+	public JsonObject sendMessage(final ResolvedLink rlink, MimeMessage mimeMessage)
+			throws MessagingException, IOException {
+		log.debug("Sent message {}", rlink);
+		JsonObject response = new JsonObject();
+		return response;
 	}
-
+	
 	public JsonObject invoke(JsonObject body) throws UnsupportedOperationException, IOException {
-		log.debug("Sending chat {} via {}", gson.toJson(body), config.getString(Config.MAILGUARD_MESSAGING_API));
+		String endpoint = "https://somemessagingendpoint/";
+		log.debug("Sending chat {} via {}", gson.toJson(body), endpoint);
 		try {
 			if (Config.getInstance().getSmtpOutType().equals(Config.SmtpOutType.dummy)) {
 				// fake the call to send the Chat message
 				JsonObject jo = new JsonObject();
-				jo.addProperty("messageID", "2b48707d-46ca-4b66-bd44-9589e365d603");
+				jo.addProperty("messageID", UUID.randomUUID().toString());
 				return jo;
 			} else {
 				// send the Chat message
-				HttpPost request = new HttpPost(config.getString(Config.MAILGUARD_MESSAGING_API));
+				HttpPost request = new HttpPost(config.getString(endpoint));
 				request.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
 				request.setEntity(new StringEntity(gson.toJson(body)));
 
@@ -80,71 +76,6 @@ public class ChatClient {
 			jo.addProperty("exception", t.getClass().getName());
 			return jo;
 		}
-	}
-
-	public JsonObject createSendBody(String userId, MimeMessage mimeMessage, Category category,
-			MessageCategory messageCategory) throws MessagingException, IOException {
-		// String content = MailUtils.getTextFromMimeMessage(mimeMessage);
-		String content;
-		try {
-			content = MailUtils.getHtmlFromMimeContent(mimeMessage);
-			if ((content == null) || (content.length() == 0)) {
-				content = MailUtils.getTextFromMimeMessage(mimeMessage);
-			}
-			return createSendBody(userId, mimeMessage.getSubject(), content, category, messageCategory);
-		} catch (Exception e) {
-			return createSendBody(userId, mimeMessage.getSubject(), e.getMessage(), category, messageCategory);
-		}
-	}
-
-	public JsonObject createSendBody(String userId, String title, String content, Category category,
-			MessageCategory messageCategory) {
-		JsonObject jo = new JsonObject();
-		jo.addProperty("recipientId", userId);
-		jo.addProperty("recipientType", "passenger");
-		jo.add("template", createTemplate(title, content, messageCategory));
-		jo.addProperty("category", category.name());
-		return jo;
-	}
-
-	private JsonObject createTemplate(String title, String content, MessageCategory messageCategory) {
-		JsonObject template = new JsonObject();
-		template.addProperty("id", templateId);
-		template.addProperty("language", "en");
-		JsonObject params = new JsonObject();
-		params.addProperty("title", title);
-		params.addProperty("message", content);
-
-		template.add("params", params);
-		return template;
-	}
-
-	public JsonObject sendMessage(final ResolvedLink rlink, MimeMessage mimeMessage)
-			throws MessagingException, IOException {
-		JsonObject rtcMessage = createSendBody(//
-				getToUid(rlink, mimeMessage), // userId
-				mimeMessage, // the mime message
-				Category.transactional, //
-				MessageCategory.Partner);
-		log.debug("Sent rtc message {}", rtcMessage);
-		JsonObject response = invoke(rtcMessage);
-		return response;
-	}
-
-	public String getToUid(ResolvedLink rlink, MimeMessage mimeMessage) throws MessagingException {
-		try {
-			for (Address fromAddress : mimeMessage.getFrom()) {
-				if (rlink.getProxyA().equals(fromAddress.toString())) {
-					return rlink.getUidB();
-				} else if (rlink.getProxyB().equals(fromAddress.toString())) {
-					return rlink.getUidA();
-				}
-			}
-		} catch (Throwable t) {
-			Utils.jsonError(log, "Could not find uid", t);
-			return "";
-		}
-		throw new MessagingException("Unrecognised from address");
 	}
 
 	public static ChatClient getInstance() {

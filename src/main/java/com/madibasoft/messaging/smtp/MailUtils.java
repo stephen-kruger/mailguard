@@ -440,4 +440,20 @@ public class MailUtils implements AspirinListener, ConfigurationListener {
 		}
 		return clean.toString();
 	}
+	
+	public static String getToUid(ResolvedLink rlink, MimeMessage mimeMessage) throws MessagingException {
+		try {
+			for (Address fromAddress : mimeMessage.getFrom()) {
+				if (rlink.getProxyA().equals(fromAddress.toString())) {
+					return rlink.getUidB();
+				} else if (rlink.getProxyB().equals(fromAddress.toString())) {
+					return rlink.getUidA();
+				}
+			}
+		} catch (Throwable t) {
+			Utils.jsonError(log, "Could not find uid", t);
+			return "";
+		}
+		throw new MessagingException("Unrecognised from address");
+	}
 }

@@ -61,7 +61,6 @@ public class Config extends CompositeConfiguration {
 	public static final String MAILGUARD_MYSQL_PORT = "mailguard_mysql_port";
 	public static final String MAILGUARD_MYSQL_USERNAME = "mailguard_mysql_username";
 	public static final String MAILGUARD_MYSQL_PASSWORD = "mailguard_mysql_password";
-	public static final String MAILGUARD_MESSAGING_API = "mailguard_messaging_api";
 
 	public enum SmtpOutType {
 		dummy, smtp, direct
@@ -125,25 +124,25 @@ public class Config extends CompositeConfiguration {
 		addConfiguration(new SystemConfiguration());
 	}
 
-	private void setupEnv() {
-		log.debug("Loading environment config");
-		Iterator<String> itr = super.getKeys();
-
-		while (itr.hasNext()) {
-			// check the env
-			try {
-				String key = itr.next().toString();
-				String value = System.getenv(key);
-				// super.getString("${env:" + key + "}");
-				if (value != null) {
-					log.info("Env override " + key + "=" + value);
-					super.setProperty(key, value);
-				}
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		}
-	}
+//	private void setupEnv() {
+//		log.debug("Loading environment config");
+//		Iterator<String> itr = super.getKeys();
+//
+//		while (itr.hasNext()) {
+//			// check the env
+//			try {
+//				String key = itr.next().toString();
+//				String value = System.getenv(key);
+//				// super.getString("${env:" + key + "}");
+//				if (value != null) {
+//					log.info("Env override " + key + "=" + value);
+//					super.setProperty(key, value);
+//				}
+//			} catch (Throwable t) {
+//				t.printStackTrace();
+//			}
+//		}
+//	}
 
 	public static Config getInstance() {
 		if (configInstance == null) {
