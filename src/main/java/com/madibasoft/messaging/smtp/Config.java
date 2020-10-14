@@ -17,6 +17,7 @@ public class Config extends CompositeConfiguration {
 	private static final Logger log = LoggerFactory.getLogger(Config.class);
 	public static final String CONFIG_NAME = "mailguard.properties";
 	public static final String CUSTOM_CONFIG_NAME = "user.properties";
+	public static final String NAME = "mailguard_name";
 
 	private static Config configInstance;
 	public static final String MAILGUARD_DB_NAME = "mailguard_dbname";
@@ -74,6 +75,8 @@ public class Config extends CompositeConfiguration {
 		setupSystem();
 		setupCustom();
 		setupBuiltin();
+		//setupEnv();
+		log.info("Expecting mail from "+this.getStringList(Config.MAILGUARD_SMTP_IN_ACCEPT));
 	}
 
 	/**
@@ -106,13 +109,6 @@ public class Config extends CompositeConfiguration {
 			} else {
 				log.info("No custom over-ride found in {}", fileName);
 				pconfig = new PropertiesConfiguration();
-				// String envString = 
-				// MAILGUARD_SMTP_IN_PORT+"=${env:"+MAILGUARD_SMTP_IN_PORT+"}\n"+
-				// MAILGUARD_SMTP_IN_PORT+"=${env:"+MAILGUARD_SMTP_IN_PORT+"}\n"+
-				// MAILGUARD_HTTP_SECRET+"=${env:"+MAILGUARD_HTTP_SECRET+"}\n"+
-				// MAILGUARD_HTTP_HOST+"=${env:"+MAILGUARD_HTTP_HOST+"}\n";
-				// ;
-				// pconfig.load(new StringReader(envString));
 			}
 
 			addConfiguration(pconfig);
@@ -127,6 +123,26 @@ public class Config extends CompositeConfiguration {
 	private void setupSystem() {
 		log.debug("Loading system config");
 		addConfiguration(new SystemConfiguration());
+	}
+
+	private void setupEnv() {
+		log.debug("Loading environment config");
+		Iterator<String> itr = super.getKeys();
+
+		while (itr.hasNext()) {
+			// check the env
+			try {
+				String key = itr.next().toString();
+				String value = System.getenv(key);
+				// super.getString("${env:" + key + "}");
+				if (value != null) {
+					log.info("Env override " + key + "=" + value);
+					super.setProperty(key, value);
+				}
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+		}
 	}
 
 	public static Config getInstance() {
@@ -160,12 +176,7 @@ public class Config extends CompositeConfiguration {
 	}
 
 	public String getString(String key) {
-		String value = super.getString(key);
-		if (value==null) {
-			// check the env
-			return super.getString("${env:"+key+"}");
-		}
-		return value;
+		return super.getString(key);
 	}
 
 	public void setString(String key, String value) {

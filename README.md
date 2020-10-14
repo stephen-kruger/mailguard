@@ -21,22 +21,19 @@ The link may be set to a default expiry, or manually expired at any time, after 
 - to build an executable jar using Maven command
     * ```mvn package```
     * ```mvn versions:display-dependency-updates```
+    * if using Gradle ```gradle dependencyUpdates```
+    * ```gradle deployProd```
     * you will find  an executable JAR file located in the docker directory `` mailguard-1.0.2-jar-with-dependencies.jar``
     
 # Runbook
 1. Deploy an EC2 instance in AWS
 1. Log in and install Java 12
-    * ```sudo apt install openjdk-12-jdk-headless```
+    * ```sudo apt install openjdk-14-jre-headless```
 1. To prevent running your Java server as root, set up iptables routes from 80->4777 and 25->2500
     * ```sudo iptables -t nat -A PREROUTING -i [INTERFACE] -p tcp -m tcp --dport 25 -j REDIRECT --to-ports 2500```
-    * ```sudo iptables -t nat -A PREROUTING -i [INTERFACE] -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 80```
-1. Create a file ~/.mailguard.properties in your home directory and configure it as follows :
-    * mailguard.host=ec2-11-22-33-44.eu-west-1.compute.amazonaws.com
-    * mailguard.http.secret=??????????
-    * mailguard.smtp.in.port=2500
-    * mailguard.smtp.in.hash_prefix=sometext
-1. Run the application
-	* ```java -jar mailguard-1.0.2-jar 2>> mailguard.out >> mailguard.err &```
+    * ```sudo iptables -t nat -A PREROUTING -i [INTERFACE] -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8000```
+1. Copy gradle.properties to ~/.gradle and edit it with details for your EC2 instance
+1. Deploy the application with command ```gradle deployProd``` or ```gradle deployStage```
 	
 # Gradle manual
 1. gradle -Prsa_file=/Users/stephen.johnson/.ssh/firenet-eu.pem -Psmtp_username=XXXXXXXXXXXXXXXXX -Psmtp_password=XXXXXXXXXXXXXX deploy

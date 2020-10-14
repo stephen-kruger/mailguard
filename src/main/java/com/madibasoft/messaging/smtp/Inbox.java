@@ -116,8 +116,8 @@ public class Inbox implements BasicMessageListener {
 					+ enfe.getMessage());
 		}
 		if (!acceptEmail(clearA, proxyB, fromUid, recipientUid)) {
-			log.warn("Rejecting message from={} to={}", MailUtils.anonymiseLog(clearA), proxyB);
-			throw new RejectException("Rejecting mail from " + clearA + " to=" + proxyB);
+			log.warn("Rejecting unsolicited mail from={} to={}", MailUtils.anonymiseLog(clearA), proxyB);
+			throw new RejectException("Rejecting unsolicited mail from " + clearA + " to=" + proxyB);
 		} else {
 			log.info("Accepting message from={} to={}", MailUtils.anonymiseLog(clearA), proxyB);
 		}

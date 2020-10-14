@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.madibasoft.messaging</groupId>
 	<artifactId>mailguard</artifactId>
-	<version>1.12.18</version>
+	<version>1.12.19</version>
 	<name>MailGuard</name>
 	<properties>
 		<subethasmtp_version>5.2.6</subethasmtp_version>

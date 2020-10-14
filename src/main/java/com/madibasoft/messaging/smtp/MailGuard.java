@@ -21,7 +21,6 @@ import com.madibasoft.messaging.smtp.ws.message.SendService;
 
 public class MailGuard {
 	private static final Logger log = LoggerFactory.getLogger(MailGuard.class);
-	private static final String NAME = "mailguard_name";
 	private SMTPServer smtpServer;
 	private DbInterface db;
 
@@ -29,7 +28,7 @@ public class MailGuard {
 			throws SQLException, InstantiationException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
 
-		log.info("Initialising {}", Config.getInstance().getString(NAME));
+		log.info("Initialising {}", Config.getInstance().getString(Config.NAME));
 		// init our db
 		db = DbFactory.getDatabase();
 		mhf.setDb(db);
@@ -45,13 +44,13 @@ public class MailGuard {
 				.maxMessageSize(Config.getInstance().getInt(Config.MAILGUARD_SMTP_IN_MAX_MAIL_SIZE, 100000)) //
 				.maxConnections(Config.getInstance().getInt(Config.MAILGUARD_SMTP_MAX_IN_CONNECTIONS)) //
 				.maxRecipients(200) //
-				.softwareName(Config.getInstance().getString(NAME)) //
+				.softwareName(Config.getInstance().getString(Config.NAME)) //
 				.messageHandlerFactory(mhf).build();
 	}
 
 	public synchronized void start() {
 		smtpServer.start();
-		log.info("Started " + Config.getInstance().getString(NAME));
+		log.info("Started " + Config.getInstance().getString(Config.NAME));
 		Config config = Config.getInstance();
 		// start the database
 		int retryCount = 10;
@@ -94,7 +93,7 @@ public class MailGuard {
 		// define the web services
 		spark.Spark.delete("/link/expire", "text/plain", new ExpireService(db));
 		spark.Spark.put("/link/set", "text/plain", new SetService(db));
-		spark.Spark.get("/link//list", "application/json", new com.madibasoft.messaging.smtp.ws.link.ListService(db));
+		spark.Spark.get("/link/list", "application/json", new com.madibasoft.messaging.smtp.ws.link.ListService(db));
 		spark.Spark.get("/message/list", "application/json", new ListService(db));
 		spark.Spark.post("/message/send", "text/plain", new SendService(db));
 
