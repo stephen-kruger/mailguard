@@ -1,9 +1,9 @@
 package com.madibasoft.messaging.smtp.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +15,17 @@ public class H2 extends DbAbstract {
 	private static final Logger log = LoggerFactory.getLogger(H2.class);
 	private Server h2Server;
 	private Connection conn = null;
+	private JdbcConnectionPool cp;
 
 	public H2() throws SQLException {
 		h2Server = Server.createTcpServer(new String[] {});
+		String url = "jdbc:h2:" + getDbName() + ";create=true";
+		cp = JdbcConnectionPool.create(url,"","");
 	}
 
 	public void start() throws Exception {
 		if (h2Server.isRunning(false)) {
-			log.error("H2  Storage instance already started");
-			throw new RuntimeException("Already started");
+			throw new RuntimeException("\"H2  Storage instance already started\"");
 		}
 		h2Server.start();
 		setupTables();
@@ -38,15 +40,15 @@ public class H2 extends DbAbstract {
 
 			h2Server.stop();
 		} catch (Throwable t) {
-			Utils.jsonError(log, "Problem stopping H@ connection", t);
+			Utils.jsonError(log, "Problem stopping H2 connection", t);
 		}
 		log.debug("Stopped H2 repository");
 	}
 
 	public Connection getConnection() throws Exception {
 		if ((conn == null) || (conn.isClosed())) {
-			String url = "jdbc:h2:" + getDbName() + ";create=true";
-			conn = DriverManager.getConnection(url);
+			log.debug("Creating new connection");
+			conn = cp.getConnection();
 		}
 		return conn;
 	}

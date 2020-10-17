@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.UUID;
+
 import com.madibasoft.messaging.smtp.Link;
 import com.madibasoft.messaging.smtp.ResolvedLink;
 import com.madibasoft.messaging.smtp.user.UserNotFoundException;
@@ -141,6 +143,7 @@ public class DbTest {
 			fail("Should not allow double start");
 		} catch (RuntimeException rte) {
 			// expected
+			log.info("Correctly detected double start");
 		}
 	}
 
@@ -155,5 +158,23 @@ public class DbTest {
 		assertTrue(db.containsByUid(uidA, uidB));
 		db.deleteLink(r1);
 		assertFalse(db.containsByUid(uidA, uidB));
+	}
+
+	@Test
+	public void stressTest() throws Exception {
+		for (int i = 0; i < 100; i++) {
+			String aaa = UUID.randomUUID().toString();
+			String bbb = UUID.randomUUID().toString();
+			assertFalse(db.containsByUid(aaa, bbb));
+
+			Link r = db.setLink(new Link(aaa, bbb));
+			assertTrue(db.containsByUid(aaa, bbb));
+			assertTrue(r.isValidLink());
+			log.info(i+" getValidity {}", r.getExpiry());
+			log.info("isValid {}", r.isValidLink());
+
+			db.deleteLink(r);
+			assertFalse(db.containsByUid(aaa, bbb));
+		}
 	}
 }

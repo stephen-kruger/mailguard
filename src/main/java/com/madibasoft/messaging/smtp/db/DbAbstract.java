@@ -162,8 +162,10 @@ abstract class DbAbstract implements DbInterface {
 		if (containsLink(link)) {
 			Link r = getLink(link);
 			r.setExpiry(link.getExpiry());
+			log.info("Updating link");
 			return updateLink(r);
 		} else {
+			log.info("Adding link");
 			return addLink(link);
 		}
 	}

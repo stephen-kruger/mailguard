@@ -12,7 +12,7 @@ import com.madibasoft.messaging.smtp.MailUtils;
 import com.madibasoft.messaging.smtp.Utils;
 
 /*
- * A production ready service should implement UserService against some existing identity system. This is a simple properties file based example for illustration.
+ * A production ready service should implement UserServiceInterface against some existing identity system. This is a simple properties file based example for illustration.
  */
 public class UserServiceImpl implements UserServiceInterface {
 	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
