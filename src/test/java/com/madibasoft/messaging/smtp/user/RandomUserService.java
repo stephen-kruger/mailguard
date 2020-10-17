@@ -17,6 +17,11 @@ public class RandomUserService implements UserServiceInterface {
 	public String lookupEmailByUid(String uid) throws UserNotFoundException {
 		return uid + "@here.com";
 	}
+	
+	@Override
+	public String lookupEmailByProxy(String proxyEmail) throws UserNotFoundException {
+		return lookupEmailByUid(lookupUidByProxy(proxyEmail));
+	}
 
 	@Override
 	public String lookupProxyByUid(String uid) throws UserNotFoundException {
@@ -47,6 +52,11 @@ public class RandomUserService implements UserServiceInterface {
 	public boolean isValidUid(String uid) throws UserNotFoundException {
 		lookupEmailByUid(uid);
 		return true;
+	}
+
+	@Override
+	public void addUser(String uid, String proxyMail, String realMail) {
+		throw new RuntimeException("NOT IMPLEMENTED");
 	}
 
 }

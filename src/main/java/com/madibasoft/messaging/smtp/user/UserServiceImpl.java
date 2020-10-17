@@ -43,6 +43,11 @@ public class UserServiceImpl implements UserServiceInterface {
 		}
 		return MailUtils.cleanEmail(email);
 	}
+	
+	@Override
+	public String lookupEmailByProxy(String proxyEmail) throws UserNotFoundException {
+		return lookupEmailByUid(lookupUidByProxy(proxyEmail));
+	}
 
 	@Override
 	public String lookupProxyByUid(String uid) throws UserNotFoundException {
@@ -78,6 +83,16 @@ public class UserServiceImpl implements UserServiceInterface {
 	public boolean isValidUid(String uid) throws UserNotFoundException {
 		lookupEmailByUid(uid);
 		return true;
+	}
+
+	@Override
+	public void addUser(String uid, String proxyMail, String realMail) {
+		props.setProperty(uid,realMail);
+		log.info(uid+"<<<<<<<<<<>>>>>>>"+realMail);
+		props.setProperty(realMail,proxyMail);
+		log.info(realMail+"<<<<<<<<<<>>>>>>>"+proxyMail);
+		props.setProperty(proxyMail,uid);
+		log.info(proxyMail+"<<<<<<<<<<>>>>>>>"+uid);
 	}
 
 }

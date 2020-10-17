@@ -27,7 +27,8 @@ dependencies {
     implementation 'com.h2database:h2:1.4.200'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.apache.commons:commons-email:1.5'
-    implementation 'mysql:mysql-connector-java:8.0.21'
+    // uncomment this if you want to use MySQL db instead of embedded H2
+  	// implementation 'mysql:mysql-connector-java:8.0.21'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.11'
     implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
     implementation 'javax.activation:activation:1.1.1'

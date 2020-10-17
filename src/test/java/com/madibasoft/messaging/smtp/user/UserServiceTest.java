@@ -94,4 +94,41 @@ public class UserServiceTest {
 			}
 		}
 	}
+	
+	@Test
+	public void testAddUser() throws UserNotFoundException {
+		UserServiceInterface us = UserServiceFactory.getInstance();
+		String uid = "675899349834";
+		String proxyMail = "testmail@proxy.com";
+		String realMail = "testmail@real.com";
+		try {
+			us.lookupProxyByUid(uid);
+		}
+		catch (UserNotFoundException nnfe) {
+			log.info("Correct exception thrown");
+		}
+		try {
+			us.lookupProxyByEmail(realMail);
+		}
+		catch (UserNotFoundException nnfe) {
+			log.info("Correct exception thrown");
+		}
+		try {
+			us.lookupUidByEmail(realMail);
+		}
+		catch (UserNotFoundException nnfe) {
+			log.info("Correct exception thrown");
+		}
+		us.addUser(uid, proxyMail, realMail);
+		
+		assertEquals(proxyMail,us.lookupProxyByUid(uid));
+		assertEquals(proxyMail,us.lookupProxyByEmail(realMail));
+		
+		assertEquals(uid,us.lookupUidByEmail(realMail));
+		assertEquals(uid,us.lookupUidByProxy(proxyMail));
+		
+		assertEquals(realMail,us.lookupEmailByUid(uid));
+		assertEquals(realMail,us.lookupEmailByProxy(proxyMail));
+
+	}
 }

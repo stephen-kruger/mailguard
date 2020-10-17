@@ -88,12 +88,12 @@ public class MailUtils implements AspirinListener, ConfigurationListener {
 	public void sendMailDummy(MimeMessage mimeMessage) throws MessagingException, IOException {
 		// no-op
 		for (Address toAddress : mimeMessage.getRecipients(RecipientType.TO)) {
+			getDeliveredMails().add(mimeMessage);
 			delivered(new Date().toString(), toAddress.toString(), ResultState.SENT, "ok");
 		}
-		getDeliveredMails().add(mimeMessage);
 	}
 
-	public List<MimeMessage> getDeliveredMails() {
+	public synchronized List<MimeMessage> getDeliveredMails() {
 		if (deliveredMails == null) {
 			deliveredMails = new ArrayList<MimeMessage>();
 		}

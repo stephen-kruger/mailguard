@@ -207,6 +207,7 @@ public class SendServiceTest {
 		JsonObject r = ss.send(toUid, fromUid, subject, body);
 		assertEquals(toUid, r.get("to").getAsString(), "Incorrect To detected");
 		assertEquals(fromUid, r.get("from").getAsString(), "Incorrect From detected");
+		Thread.sleep(2000);
 		assertEquals(1, MailUtils.getInstance().getDeliveredMails().size());
 		MimeMessage message = MailUtils.getInstance().getDeliveredMails().get(0);
 		String toUserId = us.lookupUidByEmail(message.getRecipients(RecipientType.TO)[0].toString());

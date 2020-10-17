@@ -6,6 +6,14 @@ package com.madibasoft.messaging.smtp.user;
 public interface UserServiceInterface {
 
 	/**
+	 * Add a new user record
+	 * @param uid
+	 * @param proxyMail
+	 * @param realMail
+	 */
+	void addUser(String uid, String proxyMail, String realMail);
+	
+	/**
 	 * Look up the proxy email of the specified uid
 	 * 
 	 * @param uid
@@ -22,6 +30,15 @@ public interface UserServiceInterface {
 	 * @throws UserNotFoundException thrown if the uid does not exist
 	 */
 	String lookupEmailByUid(String uid) throws UserNotFoundException;
+	
+	/**
+	 * This method will return the corresponding email for the specified uid
+	 * 
+	 * @param proxy the proxy email of the user for which an email is required
+	 * @return the email of the user with corresponding proxy email
+	 * @throws UserNotFoundException thrown if the uid does not exist
+	 */
+	String lookupEmailByProxy(String proxy) throws UserNotFoundException;
 
 	/**
 	 * This method is called when an incoming mail is received, to decide what the
